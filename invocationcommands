@@ -1,0 +1,71 @@
+// INTRODUCTION MESSAGE
+void welcome() {
+    printf("Hello Professor Hauschild . . . \n\n");
+    printf("To choose how you will input your text, please type one of the invocations below and then hit enter .\n");
+    printf("P0");
+    printf("          -> Description: Read from keyboard until simulated EOF (Unix: Ctrl + d; Windows: Ctrl + z).\n");
+    printf("P0 < [file]");
+    printf(" -> Description: will read from file until simulated EOF.\n");
+    printf("P0 [file]");
+    printf("   -> Description: will read the whole file.\n");
+}
+
+// FUNCTION FOR INVOCATION 1
+char *inputString(FILE* file, size_t size) {
+    // the size_t size in function call + size in this function don't matter # from call
+    // sets start length and size in here adds to the size stored in the call.
+    
+    char *string = realloc(NULL, sizeof( *string ) *size); 
+    
+    if(!string)return string;
+    
+    size_t length = 0;
+    int c;
+    
+    while( ( c = fgetc(file) ) != EOF ) {
+        // function will run until simulated EOF (ctrl + D)
+        string[length++] = c;
+        
+        if( length == size ) {
+            // the if statement will add the amount listed here --vv to the size
+            string = realloc(string, sizeof( *string ) * (size += 10));
+            if(!string)return string;
+        }
+    }
+    string[length++] = '\0'; //NULL character marks end of string
+    //user input/ modified string (and possibly length) is returned
+    return realloc(string, sizeof( *string ) *length);
+}
+
+// FUNCTION FOR INVOCATION 2
+char *readFileUntilEOF(char *file_name, size_t size) {
+    // this function has no comments because it is very similar to the first invocation
+    // function; the only difference is using a file instead of stdin
+    FILE *file = fopen(file_name, "r");
+    
+    if (file == NULL) {
+        printf("Could not open file. Aborting program, goodbye.\n");
+        void abort(void);
+    }
+    
+    char *string = realloc(NULL, sizeof( *string ) *size); 
+    
+    if(!string)return string;
+    
+    size_t length = 0;
+    int c;
+    
+    while( ( c = fgetc(file) ) != EOF ) {
+        string[length++] = c;
+        
+        if( length == size ) {
+            string = realloc(string, sizeof( *string ) * (size += 10));
+            if(!string)return string;
+        }
+    }
+    string[length++] = '\0'; 
+    
+    return realloc(string, sizeof( *string ) *length);
+}
+
+// FUNCTION FOR INVOCATION 3
