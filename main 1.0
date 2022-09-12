@@ -1,0 +1,114 @@
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <ctype.h>
+
+#include "invocations.h"
+//#include "node.h"
+//#include "tree.h"
+
+#define SIZE 300
+
+// ASCII Tree Art Source: https://ascii.co.uk/art/tree
+/****************************************************
+                           ###
+                         ## ####             
+                        # #### ###           
+                     ## ## ### |/####        
+                    ### # #|### |/####       
+                   ### ## #||/##/_/###_#     
+                 ###  # ###|/ #/ # ###  ##   
+                ##_#_##_### | #/###_/_####  
+               ## #### # # #| /  #### ##/##` 
+                __#_--###`  |{,###---###-~  
+                          `'|}{              
+  Build + Print a Tree      }}{              
+    Using Traversals        }}{              
+*****************************************************/
+
+char *toTree(char *input) {
+    int size = strlen(input);
+    char *temp_string = realloc(NULL, sizeof( *input ) *size); 
+    
+    // getting first token
+    char *token = strtok(input, " \t\n\v\f\r");
+    strcpy(temp_string, token);
+    
+    
+    while( token!= NULL ) {
+        
+        
+        token = strtok(NULL, " \t\n\v\f\r");
+        strcpy(temp_string, token);
+        printf(" %c\n", temp_string[0]);
+        
+    }
+    
+}
+
+char *cleanUpUserInput(char *invocation, int name_start) {
+    // code below cleans up user input to turn it into valid file name
+    char *file_name = &invocation[name_start]; 
+    char file_extension[] = ".txt";
+    
+    strtok(file_name, "\n");
+    strcat(file_name, file_extension);
+    return file_name;
+}
+
+
+int main() {
+    welcome();
+    
+    // since size of file names are limited by OS, the size is defined in a macro
+    char invocation[SIZE];
+    fgets(invocation, SIZE, stdin);
+    
+    // if statement to select file input option
+    if( invocation[0] == 'P' && invocation[1] == '0' ) {
+        // removing P0 below from the line to access file name
+        char *without_P0 = &invocation[2]; 
+        
+        int string_length;
+        string_length = strlen(without_P0);
+        
+        
+        if( string_length == 1 ) {
+            // string length will be always 1 when empty bc NULL terminator
+            printf("You have chosen the first invocation; please enter your text.\n");
+            
+            char *user_string;
+            user_string = inputString(stdin, 10);
+            toTree(user_string);
+            
+            
+        }
+        else if( without_P0[1] == '<' ) {
+            printf("You have chosen the second invocation. Reading from file...\n");
+            char *file_name = cleanUpUserInput(invocation, 5);
+            char *file_string = readFileUntilEOF(file_name, 10);
+            printf("%s\n", file_string);
+            
+        }
+        else {
+            printf("You have chosen the third invocation. Reading from file...\n");
+            char *file_name = cleanUpUserInput(invocation, 3);
+            
+            
+            
+        }
+        
+        
+    }
+    else {
+        printf("You have entered an invalid invocation. Aborting program, goodbye.\n");
+        void abort(void);
+    } 
+    
+    
+
+
+    return 0;
+}
+
+
